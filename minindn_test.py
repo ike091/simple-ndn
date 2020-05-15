@@ -2,10 +2,10 @@ from mininet.log import setLogLevel, info
 
 from minindn.minindn import Minindn
 from minindn.util import MiniNDNCLI
-from minindn.apps.appmanager import AppManager
+from minindn.apps.app_manager import AppManager
 from minindn.apps.nfd import Nfd
 from minindn.apps.nlsr import Nlsr
-from minindn.helpers.routing_helper import IPRoutingHelper
+# from minindn.helpers.routing_helper import IPRoutingHelper
 
 if __name__ == '__main__':
     setLogLevel('info')
