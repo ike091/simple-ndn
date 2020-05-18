@@ -31,7 +31,7 @@ request = pc.makeRequestRSpec()
 
 
 # Declare dedicated VM host
-pnode = request.RawPC('node')
+pnode = request.RawPC('pnode')
 pnode.hardware_type = GLOBALS.PNODE_TYPE
 
 
@@ -41,6 +41,21 @@ node2 = mkVM('node2', GLOBALS.UBUNTU18_IMG, cores=2, ram=2048)
 node3 = mkVM('node3', GLOBALS.UBUNTU18_IMG, cores=2, ram=2048)
 node4 = mkVM('node4', GLOBALS.UBUNTU18_IMG, cores=2, ram=2048)
 
+# Add links between all four nodes
+link1 = request.Link(members=[node1, node2])
+link2 = request.Link(members=[node2, node3])
+link3 = request.Link(members=[node3, node4])
+link4 = request.Link(members=[node4, node1])
+
+
+# link = request.Link("link")
+# link.trivial_ok = True
+# link.addNode(node1)
+# link.addNode(node2)
+# link.addNode(node3)
+# link.addNode(node4)
+
+# link1 = request.Link(members=[node1, node2, node3, node4])
 
 # print request
 pc.printRequestRSpec(request)
