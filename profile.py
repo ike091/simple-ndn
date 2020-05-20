@@ -51,9 +51,16 @@ link3 = request.Link(members=[node3, node4])
 link4 = request.Link(members=[node4, node1])
 
 # run the install.sh script on each vm to install software
+node1.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
 node1.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+
+node2.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
 node2.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+
+node3.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
 node3.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+
+node4.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
 node4.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
 
 # output request
