@@ -7,3 +7,4 @@ sudo add-apt-repository ppa:named-data/ppa -y
 sudo apt-get update
 
 sudo apt-get install nfd -y
+sudo apt-get install ndn-tools -y

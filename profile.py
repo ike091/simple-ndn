@@ -3,7 +3,7 @@ A base profile for experimenting with NDN over simple wired connections.
 """
 
 import geni.portal as portal
-import geni.rspec.pg as rspec
+import geni.rspec.pg as pg
 import geni.rspec.emulab as elab
 
 
@@ -49,6 +49,12 @@ link1 = request.Link(members=[node1, node2])
 link2 = request.Link(members=[node2, node3])
 link3 = request.Link(members=[node3, node4])
 link4 = request.Link(members=[node4, node1])
+
+# run the install.sh script on each vm to install software
+node1.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+node2.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+node3.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+node4.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
 
 # output request
 pc.printRequestRSpec(request)
