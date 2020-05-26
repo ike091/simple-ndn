@@ -79,10 +79,10 @@ nodes = create_nodes()
 #  if1.component_id = "eth1"
 #  if1.addAddress(rspec.IPv4Address("10.10.1.2", "255.255.255.0"))
 
-link1 = request.Link(members=[nodes[1], nodes[2]])
-link2 = request.Link(members=[nodes[2], nodes[3]])
-link3 = request.Link(members=[nodes[3], nodes[4]])
-link4 = request.Link(members=[nodes[4], nodes[1]])
+link1 = request.Link(members=[nodes[0], nodes[1]])
+link2 = request.Link(members=[nodes[1], nodes[2]])
+link3 = request.Link(members=[nodes[2], nodes[3]])
+link4 = request.Link(members=[nodes[3], nodes[0]])
 
 
 # output request
