@@ -30,38 +30,89 @@ def mkVM(name, image, cores=4, ram=4):
 
 # begin creating request
 pc = portal.Context()
-
 request = pc.makeRequestRSpec()
-
 
 # Declare dedicated VM host
 pnode = request.RawPC('pnode')
 pnode.hardware_type = GLOBALS.PNODE_D740
 
-# configure VMs and links here:
-node1 = mkVM('node1', GLOBALS.UBUNTU18_IMG, cores=4, ram=8)
-node2 = mkVM('node2', GLOBALS.UBUNTU18_IMG, cores=4, ram=8)
-node3 = mkVM('node3', GLOBALS.UBUNTU18_IMG, cores=4, ram=8)
-node4 = mkVM('node4', GLOBALS.UBUNTU18_IMG, cores=4, ram=8)
 
-# Add links between nodes (form a "circle" of connectivity)
-link1 = request.Link(members=[node1, node2])
-link2 = request.Link(members=[node2, node3])
-link3 = request.Link(members=[node3, node4])
-link4 = request.Link(members=[node4, node1])
+def create_nodes(count=4, cores=4, ram=8):
+    """Allocates and runs an install script on a specified number of VM nodes"""
+    
+    nodes = []
 
-# run the install.sh script on each vm to install software
-node1.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
-node1.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+    # create each VM
+    for i in range(1, count+1):
+        nodes.append(mkVM('node' + str(i), GLOBALS.UBUNTU18_IMG, cores=cores, ram=ram))
 
-node2.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
-node2.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+    # run the install.sh script on each vm to install software
+    for node in nodes:
+        node.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
+        node.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
 
-node3.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
-node3.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+    return nodes
 
-node4.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
-node4.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+
+# create nodes
+nodes = create_nodes()
+
+# establish connectivity
+
+#  if12 = nodes[1].addInterface("if12")
+#  if12.component_id = "eth2"
+#  if12.addAddress(rspec.IPv4Address("10.10.1.2", "255.255.255.0"))
+
+#  if21 = nodes[2].addInterface("if21")
+#  if21.component_id = "eth1"
+#  if21.addAddress(rspec.IPv4Address("10.10.2.1", "255.255.255.0"))
+
+#  link = request.LAN("lan")
+#  link.addInterface(if12)
+#  link.addInterface(if21)
+
+#  if1 = nodes[1].addInterface("if1")
+#  if1.component_id = "eth1"
+#  if1.addAddress(rspec.IPv4Address("10.10.1.2", "255.255.255.0"))
+
+#  if1 = nodes[1].addInterface("if1")
+#  if1.component_id = "eth1"
+#  if1.addAddress(rspec.IPv4Address("10.10.1.2", "255.255.255.0"))
+
+link1 = request.Link(members=[nodes[1], nodes[2]])
+link2 = request.Link(members=[nodes[2], nodes[3]])
+link3 = request.Link(members=[nodes[3], nodes[4]])
+link4 = request.Link(members=[nodes[4], nodes[1]])
+
 
 # output request
 pc.printRequestRSpec(request)
+
+
+#  old code here:
+
+# configure VMs here:
+#  node1 = mkVM('node1', GLOBALS.UBUNTU18_IMG, cores=4, ram=8)
+#  node2 = mkVM('node2', GLOBALS.UBUNTU18_IMG, cores=4, ram=8)
+#  node3 = mkVM('node3', GLOBALS.UBUNTU18_IMG, cores=4, ram=8)
+#  node4 = mkVM('node4', GLOBALS.UBUNTU18_IMG, cores=4, ram=8)
+
+# run the install.sh script on each vm to install software
+#  node1.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
+#  node1.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+
+#  node2.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
+#  node2.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+
+#  node3.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
+#  node3.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+
+#  node4.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
+#  node4.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+
+# Add links between nodes (form a "circle" of connectivity)
+#  link1 = request.Link(members=[node1, node2])
+#  link2 = request.Link(members=[node2, node3])
+#  link3 = request.Link(members=[node3, node4])
+#  link4 = request.Link(members=[node4, node1])
+

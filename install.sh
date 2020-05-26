@@ -9,7 +9,7 @@ sudo apt-get update
 sudo apt-get install nfd -y
 sudo apt-get install ndn-tools -y
 sudo apt-get install ndn-traffic-generator -y
-sudo apt-get install nslr -y
+sudo apt-get install nlsr -y
 sudo apt-get install libchronosync -y
 sudo apt-get install libpsync -y
 
