@@ -1,12 +1,12 @@
 # Getting Started
 
 **To-do:**
-* Figure out why ndn-traffic-generator is not able to be accessed
 * Experiment with ndn-traffic-generator
 * Experiment with ndnpeek and ndndump (ndn-tools)
 * Understand testbed interfaces
 * Experiment with nlsr software, and potentially add it to the auto-download script
   * configuration files?
+* Write a program for easier experimental router configuration? (nlsr.conf)
 * Experiment with ndn client-side libraries
 * Better understand the routing software
   * configuration files?
@@ -29,7 +29,8 @@ Faces for creating routes can be found with `nfdc face list`.
 Send test packets between nodes with `echo "Hello World" | ndnpoke /ndn/demo/hello` and `ndnpeek -p /ndn/demo/hello`.
 
 **Notes:**
+* Use `ifconfig` or `ip link` to find MAC addresses of the various VMs.
+* ndn-traffic-generator (`ndn-traffic-server` and `ndn-traffic-client`) must be run from a bash shell, not the defualt c shell
 
-Use `ifconfig` or `ip link` to find MAC addresses of the various VMs.
 
 
