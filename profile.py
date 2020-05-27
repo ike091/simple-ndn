@@ -39,8 +39,10 @@ pnode.hardware_type = GLOBALS.PNODE_D740
 
 def create_nodes(count=4, cores=4, ram=8):
     """Allocates and runs an install script on a specified number of VM nodes"""
-    
+
     nodes = []
+    # index nodes by their proper number (not zero-indexed)
+    nodes.append(None)
 
     # create each VM
     for i in range(1, count+1):
@@ -54,16 +56,37 @@ def create_nodes(count=4, cores=4, ram=8):
     return nodes
 
 
+def create_link(node1_num, node2_num):
+    """Creates a link with conveniently-named ip addresses between the two specfied node numbers."""
+
+    iface1 = nodes[node1_num].addInterface("if" + str(node1_num) + str (node2_num))
+    iface1.component_id = "eth" + str(node2_num)
+    iface1.addAddress(rspec.IPv4Address("10.10." + str(node1_num) + "." + str(node2_num), "255.255.255.0")) 
+
+    iface2 = nodes[node2_num].addInterface("if" + str(node2_num) + str (node1_num))
+    iface2.component_id = "eth" + str(node1_num)
+    iface2.addAddress(rspec.IPv4Address("10.10." + str(node2_num) + "." + str(node1_num), "255.255.255.0")) 
+
+    link = request.LAN("lan")
+    link.addInterface(iface1)
+    link.addInterface(iface2)
+
+
 # create nodes
 nodes = create_nodes()
 
 # establish connectivity
+create_link(1,2)
+create_link(2,3)
+create_link(3,4)
+create_link(4,1)
 
-#  if12 = nodes[1].addInterface("if12")
+
+#  if12 = nodes[0].addInterface("if12")
 #  if12.component_id = "eth2"
 #  if12.addAddress(rspec.IPv4Address("10.10.1.2", "255.255.255.0"))
 
-#  if21 = nodes[2].addInterface("if21")
+#  if21 = nodes[1].addInterface("if21")
 #  if21.component_id = "eth1"
 #  if21.addAddress(rspec.IPv4Address("10.10.2.1", "255.255.255.0"))
 
@@ -79,10 +102,10 @@ nodes = create_nodes()
 #  if1.component_id = "eth1"
 #  if1.addAddress(rspec.IPv4Address("10.10.1.2", "255.255.255.0"))
 
-link1 = request.Link(members=[nodes[0], nodes[1]])
-link2 = request.Link(members=[nodes[1], nodes[2]])
-link3 = request.Link(members=[nodes[2], nodes[3]])
-link4 = request.Link(members=[nodes[3], nodes[0]])
+#  link1 = request.Link(members=[nodes[1], nodes[2]])
+#  link2 = request.Link(members=[nodes[2], nodes[3]])
+#  link3 = request.Link(members=[nodes[3], nodes[4]])
+#  link4 = request.Link(members=[nodes[4], nodes[1]])
 
 
 # output request
@@ -115,4 +138,3 @@ pc.printRequestRSpec(request)
 #  link2 = request.Link(members=[node2, node3])
 #  link3 = request.Link(members=[node3, node4])
 #  link4 = request.Link(members=[node4, node1])
-
