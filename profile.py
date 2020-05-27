@@ -50,8 +50,9 @@ def create_nodes(count=4, cores=4, ram=8):
 
     # run the install.sh script on each vm to install software
     for node in nodes:
-        node.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
-        node.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+        if node != None:
+            node.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
+            node.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
 
     return nodes
 
