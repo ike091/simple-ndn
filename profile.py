@@ -103,18 +103,6 @@ create_link(4,1)
 #  if1.component_id = "eth1"
 #  if1.addAddress(rspec.IPv4Address("10.10.1.2", "255.255.255.0"))
 
-<<<<<<< HEAD
-#  link1 = request.Link(members=[nodes[1], nodes[2]])
-#  link2 = request.Link(members=[nodes[2], nodes[3]])
-#  link3 = request.Link(members=[nodes[3], nodes[4]])
-#  link4 = request.Link(members=[nodes[4], nodes[1]])
-=======
-link1 = request.Link(members=[nodes[1], nodes[2]])
-link2 = request.Link(members=[nodes[2], nodes[3]])
-link3 = request.Link(members=[nodes[3], nodes[4]])
-link4 = request.Link(members=[nodes[4], nodes[1]])
->>>>>>> parent of 50dea8b... fix list indexing
-
 
 # output request
 pc.printRequestRSpec(request)
