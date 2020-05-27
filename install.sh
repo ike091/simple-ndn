@@ -15,4 +15,4 @@ sudo apt-get install libpsync -y
 
 mkdir -p ~/nlsr/log/
 
-mv /local/repository/nlsr.conf ~/nlsr/
+cp /local/repository/nlsr.conf ~/nlsr/
