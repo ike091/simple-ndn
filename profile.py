@@ -4,7 +4,7 @@ A base profile for experimenting with NDN over simple wired connections.
 
 import geni.portal as portal
 import geni.rspec.pg as pg
-#  import geni.rspec.emulab as elab
+import geni.rspec.emulab as elab
 
 
 class GLOBALS(object):
