@@ -3,7 +3,7 @@ A base profile for experimenting with NDN over simple wired connections.
 """
 
 import geni.portal as portal
-import geni.rspec.pg as rspec
+import geni.rspec.pg as pg
 #  import geni.rspec.emulab as elab
 
 
@@ -51,8 +51,8 @@ def create_nodes(count=4, cores=4, ram=8):
     # run the install.sh script on each vm to install software
     for node in nodes:
         if node != None:
-            node.addService(rspec.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
-            node.addService(rspec.Execute(shell="sh", command="/local/repository/install.sh"))
+            node.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
+            node.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
 
     return nodes
 
@@ -62,11 +62,11 @@ def create_link(node1_num, node2_num):
 
     iface1 = nodes[node1_num].addInterface("if" + str(node1_num) + str (node2_num))
     iface1.component_id = "eth" + str(node2_num)
-    iface1.addAddress(rspec.IPv4Address("10.10." + str(node1_num) + "." + str(node2_num), "255.255.255.0")) 
+    iface1.addAddress(pg.IPv4Address("10.10." + str(node1_num) + "." + str(node2_num), "255.255.255.0")) 
 
     iface2 = nodes[node2_num].addInterface("if" + str(node2_num) + str (node1_num))
     iface2.component_id = "eth" + str(node1_num)
-    iface2.addAddress(rspec.IPv4Address("10.10." + str(node2_num) + "." + str(node1_num), "255.255.255.0")) 
+    iface2.addAddress(pg.IPv4Address("10.10." + str(node2_num) + "." + str(node1_num), "255.255.255.0")) 
 
     link = request.LAN("lan")
     link.addInterface(iface1)
@@ -117,17 +117,17 @@ pc.printRequestRSpec(request)
 #  node4 = mkVM('node4', GLOBALS.UBUNTU18_IMG, cores=4, ram=8)
 
 # run the install.sh script on each vm to install software
-#  node1.addService(rspec.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
-#  node1.addService(rspec.Execute(shell="sh", command="/local/repository/install.sh"))
+#  node1.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
+#  node1.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
 
-#  node2.addService(rspec.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
-#  node2.addService(rspec.Execute(shell="sh", command="/local/repository/install.sh"))
+#  node2.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
+#  node2.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
 
-#  node3.addService(rspec.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
-#  node3.addService(rspec.Execute(shell="sh", command="/local/repository/install.sh"))
+#  node3.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
+#  node3.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
 
-#  node4.addService(rspec.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
-#  node4.addService(rspec.Execute(shell="sh", command="/local/repository/install.sh"))
+#  node4.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
+#  node4.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
 
 # Add links between nodes (form a "circle" of connectivity)
 #  link1 = request.Link(members=[node1, node2])
