@@ -10,7 +10,19 @@ class GLOBALS(object):
     SITE_URN = "urn:publicid:IDN+emulab.net+authority+cm"
     # standard Ubuntu release
     UBUNTU18_IMG = "urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU18-64-STD"
-    PNODE_D740 = "d740"  # 24 cores, 192 GB RAM PNODE_D840 = "d840"  # 64 cores, 768 GB RAM
+    PNODE_D740 = "d740"  # 24 cores, 192 GB RAM 
+    PNODE_D840 = "d840"  # 64 cores, 768 GB RAM
+
+
+# define network parameters
+portal.context.defineParameter("n", "Number of network nodes", portal.ParameterType.INTEGER, 4)
+
+# retrieve the values the user specifies during instantiation
+params = portal.context.bindParameters()
+
+#  check parameter validity
+if params.n < 2 or params.n > 10:
+    portal.context.reportError( portal.ParameterError( "You must choose at least 2 and no more than 10 nodes." ))
 
 
 def mkVM(name, image, cores=4, ram=4):
@@ -68,13 +80,17 @@ def create_link(node1_num, node2_num):
 
 
 # create nodes
-nodes = create_nodes()
+if(params.n < 6):
+    nodes = create_nodes(count=params.n, cores=4, ram=16)
+elif:
+    nodes = create_nodes(count=params.n, cores=2, ram=16)
 
-# establish connectivity
-create_link(1,2)
-create_link(2,3)
-create_link(3,4)
-create_link(4,1)
+
+# establish a "circle" of connectivity
+for i in range(1, params.n):
+    create_link(i, i+1)
+create_link(params.n, 1)
+
 
 # output request
 pc.printRequestRSpec(request)
