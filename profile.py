@@ -78,7 +78,8 @@ def create_link(node1_num, node2_num):
     iface2.addAddress(pg.IPv4Address("10.10." + str(node2_num) + "." + str(node1_num), "255.255.255.0")) 
 
     link = request.LAN("lan" + str(node1_num) + str(node2_num))
-    link.addInterface(iface1) link.addInterface(iface2)
+    link.addInterface(iface1) 
+    link.addInterface(iface2)
 
 
 # create nodes with compute power divided somewhat evenly
