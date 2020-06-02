@@ -42,7 +42,8 @@ pc = portal.Context()
 request = pc.makeRequestRSpec()
 
 # Declare dedicated VM host
-pnode = request.RawPC('pnode') pnode.hardware_type = GLOBALS.PNODE_D740
+pnode = request.RawPC('pnode') 
+pnode.hardware_type = GLOBALS.PNODE_D740
 
 
 def create_nodes(count=4, cores=4, ram=8):
