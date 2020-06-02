@@ -38,7 +38,8 @@ def mkVM(name, image, cores=4, ram=4):
 
 
 # begin creating request
-pc = portal.Context() request = pc.makeRequestRSpec()
+pc = portal.Context() 
+request = pc.makeRequestRSpec()
 
 # Declare dedicated VM host
 pnode = request.RawPC('pnode') pnode.hardware_type = GLOBALS.PNODE_D740
