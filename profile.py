@@ -79,7 +79,7 @@ def create_link(node1_num, node2_num):
     link.addInterface(iface1) link.addInterface(iface2)
 
 
-# create nodes
+# create nodes with compute power divided somewhat evenly
 if(params.n < 6):
     nodes = create_nodes(count=params.n, cores=4, ram=16)
 elif:
