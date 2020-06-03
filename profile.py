@@ -69,33 +69,41 @@ def create_nodes(count=4, cores=4, ram=8):
     return nodes
 
 
-def create_link(node1_num, node2_num):
-    """Creates a link with conveniently-named ip addresses between the two specfied node numbers.""" 
+#  def create_link(node1_num, node2_num):
+    #  """Creates a link with conveniently-named ip addresses between the two specfied node numbers.""" 
 
-    iface1 = nodes[node1_num].addInterface("if" + str(node1_num) + str(node2_num))
-    iface1.component_id = "eth" + str(node2_num)
-    iface1.addAddress(pg.IPv4Address("10.10." + str(node1_num) + "." + str(node2_num), "255.255.255.0")) 
+    #  iface1 = nodes[node1_num].addInterface("if" + str(node1_num) + str(node2_num))
+    #  iface1.component_id = "eth" + str(node2_num)
+    #  iface1.addAddress(pg.IPv4Address("10.10." + str(node1_num) + "." + str(node2_num), "255.255.255.0")) 
 
-    iface2 = nodes[node2_num].addInterface("if" + str(node2_num) + str(node1_num))
-    iface2.component_id = "eth" + str(node1_num)
-    iface2.addAddress(pg.IPv4Address("10.10." + str(node2_num) + "." + str(node1_num), "255.255.255.0")) 
+    #  iface2 = nodes[node2_num].addInterface("if" + str(node2_num) + str(node1_num))
+    #  iface2.component_id = "eth" + str(node1_num)
+    #  iface2.addAddress(pg.IPv4Address("10.10." + str(node2_num) + "." + str(node1_num), "255.255.255.0")) 
 
-    link = request.LAN("lan" + str(node1_num) + str(node2_num))
-    link.addInterface(iface1)
-    link.addInterface(iface2)
-
-
-# create nodes with compute power divided somewhat evenly
-if(params.n < 6):
-    nodes = create_nodes(count=params.n, cores=4, ram=16)
-else:
-    nodes = create_nodes(count=params.n, cores=2, ram=16)
+    #  link = request.LAN("lan" + str(node1_num) + str(node2_num))
+    #  link.addInterface(iface1)
+    #  link.addInterface(iface2)
 
 
-# establish a "circle" of connectivity
-for i in range(0, params.n-1):
-    create_link(i, i+1)
-create_link(params.n-1, 0)
+nodes = create_nodes()
+
+link1 = request.Link(members=[nodes[0], nodes[1]])
+link2 = request.Link(members=[nodes[1], nodes[2]])
+link3 = request.Link(members=[nodes[2], nodes[3]])
+link4 = request.Link(members=[nodes[3], nodes[0]])
+
+
+#  # create nodes with compute power divided somewhat evenly
+#  if(params.n < 6):
+    #  nodes = create_nodes(count=params.n, cores=4, ram=16)
+#  else:
+    #  nodes = create_nodes(count=params.n, cores=2, ram=16)
+
+
+#  # establish a "circle" of connectivity
+#  for i in range(0, params.n-1):
+    #  create_link(i, i+1)
+#  create_link(params.n-1, 0)
 
 
 # output request
