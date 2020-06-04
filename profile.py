@@ -15,7 +15,7 @@ class GLOBALS(object):
 
 
 # define network parameters
-portal.context.defineParameter("n", "Number of network nodes", portal.ParameterType.INTEGER, 4)
+portal.context.defineParameter("n", "Number of network nodes", portal.ParameterType.INTEGER, 2)
 
 # retrieve the values the user specifies during instantiation
 params = portal.context.bindParameters()
@@ -56,55 +56,29 @@ def create_nodes(count=4, cores=4, ram=8):
     """
 
     nodes = []
+    # index nodes by their proper number (not zero-indexed)
+    nodes.append(None)
 
     # create each VM
-    for i in range(count):
+    for i in range(1, count + 1):
         nodes.append(mkVM('node' + str(i), GLOBALS.UBUNTU18_IMG, cores=cores, ram=ram))
 
     # run the install.sh script on each vm to install software
     for node in nodes:
-        node.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
-        node.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+        if node is not None:
+            node.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
+            node.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
 
     return nodes
 
 
-#  def create_link(node1_num, node2_num):
-    #  """Creates a link with conveniently-named ip addresses between the two specfied node numbers.""" 
-
-    #  iface1 = nodes[node1_num].addInterface("if" + str(node1_num) + str(node2_num))
-    #  iface1.component_id = "eth" + str(node2_num)
-    #  iface1.addAddress(pg.IPv4Address("10.10." + str(node1_num) + "." + str(node2_num), "255.255.255.0")) 
-
-    #  iface2 = nodes[node2_num].addInterface("if" + str(node2_num) + str(node1_num))
-    #  iface2.component_id = "eth" + str(node1_num)
-    #  iface2.addAddress(pg.IPv4Address("10.10." + str(node2_num) + "." + str(node1_num), "255.255.255.0")) 
-
-    #  link = request.LAN("lan" + str(node1_num) + str(node2_num))
-    #  link.addInterface(iface1)
-    #  link.addInterface(iface2)
-
-
 nodes = create_nodes()
 
-link1 = request.Link(members=[nodes[0], nodes[1]])
-link2 = request.Link(members=[nodes[1], nodes[2]])
-link3 = request.Link(members=[nodes[2], nodes[3]])
-link4 = request.Link(members=[nodes[3], nodes[0]])
-
-
-#  # create nodes with compute power divided somewhat evenly
-#  if(params.n < 6):
-    #  nodes = create_nodes(count=params.n, cores=4, ram=16)
-#  else:
-    #  nodes = create_nodes(count=params.n, cores=2, ram=16)
-
-
-#  # establish a "circle" of connectivity
-#  for i in range(0, params.n-1):
-    #  create_link(i, i+1)
-#  create_link(params.n-1, 0)
-
+# establish a "circle" of connectivity
+for i in range(1, params.n):
+    request.Link(members=[nodes[i], nodes[i+1]])
+if params.n != 2:
+    request.Link(members=[nodes[params.n], nodes[1]])
 
 # output request
 pc.printRequestRSpec(request)
