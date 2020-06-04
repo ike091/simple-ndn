@@ -12,7 +12,8 @@
   * configuration files?
   * autogenerate routes to producers
   * avoid manual setup of routes
-* Get NDN working over a 4G or 5G network (instead of ethernet)
+* Get NDN working over ethernet
+* Get NDN working over a 4G or 5G network
 
 **Instructions:**
 
@@ -27,10 +28,6 @@ Create routes between nodes with `nfdc route add`.
 Faces for creating routes can be found with `nfdc face list`.
 
 Send test packets between nodes with `echo "Hello World" | ndnpoke /ndn/demo/hello` and `ndnpeek -p /ndn/demo/hello`.
-
-**Notes:**
-* Use `ifconfig` or `ip link` to find MAC addresses of the various VMs.
-* ndn-traffic-generator (`ndn-traffic-server` and `ndn-traffic-client`) must be run from a bash shell, not the defualt c shell
 
 
 
