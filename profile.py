@@ -25,7 +25,7 @@ if params.n < 2 or params.n > 10:
     portal.context.reportError(portal.ParameterError("You must choose at least 2 and no more than 10 nodes."))
 
 
-def mkVM(name, image, cores=4, ram=4):
+def mkVM(name, image, cores, ram):
     """Creates a VM with the specified parameters
 
     Returns that VM
@@ -49,7 +49,7 @@ pnode = request.RawPC('pnode')
 pnode.hardware_type = GLOBALS.PNODE_D740
 
 
-def create_nodes(count=4, cores=4, ram=8):
+def create_nodes(count=2, cores=4, ram=8):
     """Allocates and runs an install script on a specified number of VM nodes
 
     Returns a list of nodes.
@@ -72,7 +72,7 @@ def create_nodes(count=4, cores=4, ram=8):
     return nodes
 
 
-nodes = create_nodes()
+nodes = create_nodes(count=params.n)
 
 # establish a "circle" of connectivity
 for i in range(1, params.n):
