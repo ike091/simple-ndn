@@ -1,4 +1,4 @@
-"""A base profile for experimenting with NDN over wired connections.
+"""A base profile for experimenting with NDN.
 
 Instructions:
 Wait for the profile instance to start, and then log into either VM via the ssh ports specified below.
@@ -20,7 +20,6 @@ class GLOBALS(object):
 
 # define network parameters
 portal.context.defineParameter("n", "Number of network nodes", portal.ParameterType.INTEGER, 2)
-portal.context.defineParameter("physical", "Should the nodes be physical?", portal.ParameterType.BOOLEAN, False)
 
 # retrieve the values the user specifies during instantiation
 params = portal.context.bindParameters()
@@ -72,38 +71,18 @@ def create_nodes(count=2, instantiateOn='pnode', cores=4, ram=8):
 pc = portal.Context()
 request = pc.makeRequestRSpec()
 
-# allocate physical or virtual hosts
-if params.physical:
-    # request physical nodes
-    node1 = request.RawPC('node1')
-    node1.hardware_type = GLOBALS.PNODE_D740
-    node1.disk_image = GLOBALS.UBUNTU18_IMG 
-    node2 = request.RawPC('node2')
-    node2.hardware_type = GLOBALS.PNODE_D740
-    node2.disk_image = GLOBALS.UBUNTU18_IMG 
+# declare dedicated VM host
+pnode = request.RawPC('pnode')
+pnode.hardware_type = GLOBALS.PNODE_D740
 
-    # run install scripts
-    node1.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
-    node1.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
-    node2.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install.sh"))
-    node2.addService(pg.Execute(shell="sh", command="/local/repository/install.sh"))
+# create nodes on dedicated host
+nodes = create_nodes(count=params.n, instantiateOn='pnode')
 
-    # establish connectivity
-    request.Link(members=[node1, node2])
-
-else:
-    # declare dedicated VM host
-    pnode = request.RawPC('pnode')
-    pnode.hardware_type = GLOBALS.PNODE_D740
-
-    nodes = create_nodes(count=params.n, instantiateOn='pnode')
-
-    # establish a "circle" of connectivity
-    for i in range(1, params.n):
-        request.Link(members=[nodes[i], nodes[i+1]])
-    if params.n != 2:
-        request.Link(members=[nodes[params.n], nodes[1]])
-
+# establish a "circle" of connectivity
+for i in range(1, params.n):
+    request.Link(members=[nodes[i], nodes[i+1]])
+if params.n != 2:
+    request.Link(members=[nodes[params.n], nodes[1]])
 
 # output request
 pc.printRequestRSpec(request)

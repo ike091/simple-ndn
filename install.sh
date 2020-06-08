@@ -21,5 +21,5 @@ mkdir -p ~/nlsr/log/
 # copy the nlsr configuration file to the nlsr directory
 cp /local/repository/nlsr.conf ~/nlsr/
 
-# copy my .vimrc on each VM (I really like my remappings)
+# copy a .vimrc on each VM (provides useful remappings)
 cp /local/repository/.vimrc ~/
