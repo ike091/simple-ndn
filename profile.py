@@ -76,7 +76,10 @@ pnode = request.RawPC('pnode')
 pnode.hardware_type = GLOBALS.PNODE_D740
 
 # create nodes on dedicated host
-nodes = create_nodes(count=params.n, instantiateOn='pnode')
+if params.n == 2:
+    nodes = create_nodes(count=params.n, instantiateOn='pnode', cores=8, ram=64)
+else:
+    nodes = create_nodes(count=params.n, instantiateOn='pnode')
 
 # establish a "circle" of connectivity
 for i in range(1, params.n):
