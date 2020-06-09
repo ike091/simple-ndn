@@ -77,7 +77,7 @@ pnode.hardware_type = GLOBALS.PNODE_D740
 
 # create nodes on dedicated host
 if params.n == 2:
-    nodes = create_nodes(count=params.n, instantiateOn='pnode', cores=8, ram=64)
+    nodes = create_nodes(count=params.n, instantiateOn='pnode', cores=8, ram=32)
 else:
     nodes = create_nodes(count=params.n, instantiateOn='pnode')
 
