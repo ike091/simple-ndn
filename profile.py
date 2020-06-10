@@ -21,7 +21,7 @@ class GLOBALS(object):
 # define network parameters
 portal.context.defineParameter("n", "Number of network nodes", portal.ParameterType.INTEGER, 2)
 portal.context.defineParameter("bandwidth", "Bandwidth of link (Kbps)", portal.ParameterType.BANDWIDTH, 110000)
-portal.context.defineParameter("latency", "Number of network nodes", portal.ParameterType.LATENCY, 1)
+portal.context.defineParameter("latency", "Latency of link (milliseconds)", portal.ParameterType.LATENCY, 1)
 
 # retrieve the values the user specifies during instantiation
 params = portal.context.bindParameters()
