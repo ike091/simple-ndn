@@ -24,11 +24,14 @@
 * Use `nfdc` to view all subcommands
 * Use the `nfdc cs` commands to manipulate the content store
 * ndn-traffic-generator (`ndn-traffic-server` and `ndn-traffic-client`) may need to be run from a bash shell, not the defualt c shell
+* Use the `tc` command to configure network behavior (note that it often must be run as root). Latency, packet loss, packet corruption, and all sorts of interesting things can be done.
 
 
 **Questions to ask:**
 * What are the channels found with the `nfdc channel list` command? How are they different from the faces found with `nfdc face list`
 * Figure out how to add ethernet faces - we're stuck here
+* Figure out why 75% of packets are being lost when packet loss is set to 50% with `sudo tc qdisc add dev eth1 root netem loss 10%`.
+
 
 
 
