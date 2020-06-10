@@ -94,9 +94,9 @@ if params.n != 2:
 # set link performance
 for link in links:
     # Kbps
-    link.bandwidth = params.bandwidth
+    link.bandwidth = int(params.bandwidth)
     # milliseconds
-    link.latency = params.latency
+    link.latency = int(params.latency)
     # Packet loss is a number 0.0 <= loss <= 1.0
     link.plr = 0.0 
 
