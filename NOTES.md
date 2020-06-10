@@ -17,7 +17,7 @@
 	*  `ndnpoke` transmits a single data packet; however, multiple requests for that data can be satisfied if the data is cached in the Content Store.
 * Routes are one-way, and they must exist in the RIB before interests can be satisfied
 * `nfd-status` prints lots of useful information
-* A correct udp4 face must be created before nlsr will work properly. Use something like `nfd face create udp4://10.10.x.x`
+* A correct udp4 face must be created before nlsr will work properly. Use something like `nfdc face create udp4://10.10.x.x`
 * Use `ifconfig` or `ip link` to find MAC addresses of the various VMs.
 * NFD configuration file is located at `/etc/ndn/nfd.conf`
 * See FAQ for setting up ethernet faces

@@ -20,6 +20,8 @@ class GLOBALS(object):
 
 # define network parameters
 portal.context.defineParameter("n", "Number of network nodes", portal.ParameterType.INTEGER, 2)
+portal.context.defineParameter("bandwidth", "Bandwidth of link (Kbps)", portal.ParameterType.BANDWIDTH, 110000)
+portal.context.defineParameter("latency", "Number of network nodes", portal.ParameterType.LATENCY, 1)
 
 # retrieve the values the user specifies during instantiation
 params = portal.context.bindParameters()
@@ -82,10 +84,23 @@ else:
     nodes = create_nodes(count=params.n, instantiateOn='pnode')
 
 # establish a "circle" of connectivity
+links = []
 for i in range(1, params.n):
-    request.Link(members=[nodes[i], nodes[i+1]])
+    links.append(request.Link(members=[nodes[i], nodes[i+1]]))
+# complete the circle
 if params.n != 2:
-    request.Link(members=[nodes[params.n], nodes[1]])
+    links.append(request.Link(members=[nodes[params.n], nodes[1]]))
+
+# set link performance
+for link in links:
+    # Kbps
+    link.bandwidth = params.bandwidth
+    # milliseconds
+    link.latency = params.latency
+    # Packet loss is a number 0.0 <= loss <= 1.0
+    link.plr = 0.0 
+
 
 # output request
 pc.printRequestRSpec(request)
+
