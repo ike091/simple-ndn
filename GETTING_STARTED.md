@@ -19,4 +19,4 @@ Send test packets between nodes with `ndnpoke` and `ndnpeek`. If the PPA reposit
 
 **NLSR (Named-Data Link State Routing) Setup**
 
-Install NLSR from the PPA repository or build from source. Modify the provided configuration file to appropriatly name routers and their neighbors.
+Install NLSR from the PPA repository or build from source. Modify the provided configuration file to appropriatly name routers and their neighbors (if a two-node network was used, the network should be automatically configured properly). The advertising section of the configuration files can also be modified to tell the network what data is available where.
