@@ -44,7 +44,7 @@ def mkVM(name, image, instantiateOn, cores, ram):
     return node
 
 
-def create_nodes(count=2, instantiateOn='pnode', cores=2, ram=4):
+def create_nodes(count=2, prefix=1, instantiateOn='pnode', cores=2, ram=4):
     """Allocates and runs an install script on a specified number of VM nodes
 
     Returns a list of nodes.
@@ -56,7 +56,7 @@ def create_nodes(count=2, instantiateOn='pnode', cores=2, ram=4):
 
     # create each VM
     for i in range(1, count + 1):
-        nodes.append(mkVM('node' + str(i), GLOBALS.UBUNTU18_IMG, instantiateOn=instantiateOn, cores=cores, ram=ram))
+        nodes.append(mkVM('node-' + str(prefix) + '.' + str(i), GLOBALS.UBUNTU18_IMG, instantiateOn=instantiateOn, cores=cores, ram=ram))
 
     # run install scripts on each vm to install software
     for node in nodes:
@@ -106,8 +106,8 @@ pnode.hardware_type = GLOBALS.PNODE_D740
 
 # create nodes on dedicated host
 routers = create_routers()
-nodes1 = create_nodes(count=params.n)
-nodes2 = create_nodes(count=params.n)
+nodes1 = create_nodes(count=params.n, prefix=1)
+nodes2 = create_nodes(count=params.n, prefix=2)
 
 # setup the first LAN
 for node in nodes1:
