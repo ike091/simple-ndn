@@ -1,7 +1,7 @@
 """A base profile for experimenting with NDN.
 
 Instructions:
-Wait for the profile instance to start, and then log into either VM via the ssh ports specified below. Note that much of the automatic network setup is currently only supported with a two-node network.
+Wait for the profile instance to start, and then log into either VM via the ssh ports specified below.
 """
 
 import geni.portal as portal
@@ -20,15 +20,13 @@ class GLOBALS(object):
 
 # define network parameters
 portal.context.defineParameter("n", "Number of network nodes", portal.ParameterType.INTEGER, 2)
-#  portal.context.defineParameter("bandwidth", "Bandwidth of link (Kbps)", portal.ParameterType.BANDWIDTH, 110000)
-#  portal.context.defineParameter("latency", "Latency of link (milliseconds)", portal.ParameterType.LATENCY, 1)
 
 # retrieve the values the user specifies during instantiation
 params = portal.context.bindParameters()
 
 #  check parameter validity
-if params.n < 2 or params.n > 10:
-    portal.context.reportError(portal.ParameterError("You must choose at least 2 and no more than 10 nodes."))
+if params.n < 1 or params.n > 4:
+    portal.context.reportError(portal.ParameterError("You must choose at least 2 and no more than 4 nodes."))
 
 
 def mkVM(name, image, instantiateOn, cores, ram):
@@ -46,7 +44,7 @@ def mkVM(name, image, instantiateOn, cores, ram):
     return node
 
 
-def create_nodes(count=2, instantiateOn='pnode', cores=4, ram=8):
+def create_nodes(count=2, instantiateOn='pnode', cores=2, ram=4):
     """Allocates and runs an install script on a specified number of VM nodes
 
     Returns a list of nodes.
@@ -60,54 +58,73 @@ def create_nodes(count=2, instantiateOn='pnode', cores=4, ram=8):
     for i in range(1, count + 1):
         nodes.append(mkVM('node' + str(i), GLOBALS.UBUNTU18_IMG, instantiateOn=instantiateOn, cores=cores, ram=ram))
 
-    # run alternating install scripts on each vm to install software 
-    odd_node = True
+    # run install scripts on each vm to install software 
     for node in nodes:
         if node is not None:
-            if odd_node:
-                node.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install1.sh"))
-                node.addService(pg.Execute(shell="sh", command="/local/repository/install1.sh"))
-            else:
-                node.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install2.sh"))
-                node.addService(pg.Execute(shell="sh", command="/local/repository/install2.sh"))
-            odd_node = not odd_node
+            node.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install1.sh"))
+            node.addService(pg.Execute(shell="sh", command="/local/repository/install1.sh"))
 
     return nodes
+
+
+def create_routers(instantiateOn='pnode', cores=4, ram=8):
+    """Allocates and runs an install script on two virtualized routers
+
+    Returns a list of routers.
+    """
+
+    routers = []
+    # index routers by their proper number (not zero-indexed)
+    routers.append(None)
+
+    # create each VM
+    for i in range(1, 3):
+        routers.append(mkVM('router' + str(i), GLOBALS.UBUNTU18_IMG, instantiateOn=instantiateOn, cores=cores, ram=ram))
+
+    # run alternating install scripts on each vm to install software 
+    odd_router = True
+    for router in routers:
+        if router is not None:
+            if odd_router:
+                router.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install1.sh"))
+                router.addService(pg.Execute(shell="sh", command="/local/repository/install1.sh"))
+            else:
+                router.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install2.sh"))
+                router.addService(pg.Execute(shell="sh", command="/local/repository/install2.sh"))
+            odd_router = not odd_router
+
+    return routers
 
 
 # begin creating request
 pc = portal.Context()
 request = pc.makeRequestRSpec()
 
-# declare dedicated VM host
+# declare a dedicated VM host
 pnode = request.RawPC('pnode')
 pnode.hardware_type = GLOBALS.PNODE_D740
 
 # create nodes on dedicated host
-if params.n == 2:
-    nodes = create_nodes(count=params.n, instantiateOn='pnode', cores=8, ram=64)
-else:
-    nodes = create_nodes(count=params.n, instantiateOn='pnode')
+routers = create_routers()
+nodes1 = create_nodes(count=params.n)
+nodes2 = create_nodes(count=params.n)
 
+# setup the first LAN
+LAN1 = request.LAN("private")
+LAN1.addInterface(router[1].addInterface())
+for node in nodes1:
+    if node is not none:
+        LAN1.addInterface(node.addInterface())
 
+# setup the second LAN
+LAN2 = request.LAN("private")
+LAN2.addInterface(router[2].addInterface())
+for node in nodes2:
+    if node is not none:
+        LAN2.addInterface(node.addInterface())
 
-# establish a "circle" of connectivity
-links = []
-for i in range(1, params.n):
-    links.append(request.Link(members=[nodes[i], nodes[i+1]]))
-# complete the circle
-if params.n != 2:
-    links.append(request.Link(members=[nodes[params.n], nodes[1]]))
-
-# set link performance
-#  for link in links:
-    #  # Kbps
-    #  link.bandwidth = int(params.bandwidth)
-    #  # milliseconds
-    #  link.latency = int(params.latency)
-    #  # Packet loss is a number 0.0 <= loss <= 1.0
-    #  link.plr = 0.0 
-
+# setup a link between LANs
+request.Link(members=[router[1], router[2])
 
 # output request
 pc.printRequestRSpec(request)
