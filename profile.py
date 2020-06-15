@@ -56,7 +56,7 @@ def create_nodes(count=2, prefix=1, instantiateOn='pnode', cores=2, ram=4):
 
     # create each VM
     for i in range(1, count + 1):
-        nodes.append(mkVM('node-' + str(prefix) + '.' + str(i), GLOBALS.UBUNTU18_IMG, instantiateOn=instantiateOn, cores=cores, ram=ram))
+        nodes.append(mkVM('node' + str(prefix) + '.' + str(i), GLOBALS.UBUNTU18_IMG, instantiateOn=instantiateOn, cores=cores, ram=ram))
 
     # run install scripts on each vm to install software
     for node in nodes:
