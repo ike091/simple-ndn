@@ -58,7 +58,7 @@ def create_nodes(count=2, instantiateOn='pnode', cores=2, ram=4):
     for i in range(1, count + 1):
         nodes.append(mkVM('node' + str(i), GLOBALS.UBUNTU18_IMG, instantiateOn=instantiateOn, cores=cores, ram=ram))
 
-    # run install scripts on each vm to install software 
+    # run install scripts on each vm to install software
     for node in nodes:
         if node is not None:
             node.addService(pg.Execute(shell="sh", command="chmod +x /local/repository/install1.sh"))
@@ -81,7 +81,7 @@ def create_routers(instantiateOn='pnode', cores=4, ram=8):
     for i in range(1, 3):
         routers.append(mkVM('router' + str(i), GLOBALS.UBUNTU18_IMG, instantiateOn=instantiateOn, cores=cores, ram=ram))
 
-    # run alternating install scripts on each vm to install software 
+    # run alternating install scripts on each vm to install software
     odd_router = True
     for router in routers:
         if router is not None:
@@ -105,30 +105,22 @@ pnode = request.RawPC('pnode')
 pnode.hardware_type = GLOBALS.PNODE_D740
 
 # create nodes on dedicated host
-router = create_routers()
+routers = create_routers()
 nodes1 = create_nodes(count=params.n)
 nodes2 = create_nodes(count=params.n)
 
 # setup the first LAN
-LAN1 = request.LAN("LAN1")
-LAN1.addInterface(router[1].addInterface())
 for node in nodes1:
     if node is not None:
-        LAN1.addInterface(node.addInterface())
+        request.link(members=[routers[1], node])
 
 # setup the second LAN
-LAN2 = request.LAN("LAN2")
-LAN2.addInterface(router[2].addInterface())
 for node in nodes2:
     if node is not None:
-        LAN2.addInterface(node.addInterface())
+        request.link(members=[routers[2], node])
 
-# setup a link between LANs
-
-#  link = request.LAN("link")
-#  link.addInterface(router[1].addInterface())
-#  link.addInterface(router[2].addInterface())
+# setup a link between routerss
+request.link(members=[routers[1], routers[2]])
 
 # output request
 pc.printRequestRSpec(request)
-
