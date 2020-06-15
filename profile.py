@@ -112,15 +112,15 @@ nodes2 = create_nodes(count=params.n)
 # setup the first LAN
 for node in nodes1:
     if node is not None:
-        request.link(members=[routers[1], node])
+        request.Link(members=[routers[1], node])
 
 # setup the second LAN
 for node in nodes2:
     if node is not None:
-        request.link(members=[routers[2], node])
+        request.Link(members=[routers[2], node])
 
 # setup a link between routerss
-request.link(members=[routers[1], routers[2]])
+request.Link(members=[routers[1], routers[2]])
 
 # output request
 pc.printRequestRSpec(request)
