@@ -125,7 +125,7 @@ for node in nodes2:
 
 # setup a link between LANs
 
-link = request.Link()
+link = request.LAN("link")
 link.addInterface(router[1].addInterface())
 link.addInterface(router[2].addInterface())
 
