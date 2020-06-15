@@ -124,7 +124,7 @@ for node in nodes2:
         LAN2.addInterface(node.addInterface())
 
 # setup a link between LANs
-request.Link(members=[router[1], router[2])
+request.Link(members=[router[1], router[2]])
 
 # output request
 pc.printRequestRSpec(request)
