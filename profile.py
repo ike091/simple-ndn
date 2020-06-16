@@ -110,14 +110,28 @@ nodes1 = create_nodes(count=params.n, prefix=1)
 nodes2 = create_nodes(count=params.n, prefix=2)
 
 # setup the first LAN
+LAN1 = request.LAN("LAN1")
+LAN1.addInterface(routers[1].addInterface())
 for node in nodes1:
     if node is not None:
-        request.Link(members=[routers[1], node])
+        LAN1.addInterface(node.addInterface())
 
 # setup the second LAN
+LAN2 = request.LAN("LAN2")
+LAN2.addInterface(routers[2].addInterface())
 for node in nodes2:
     if node is not None:
-        request.Link(members=[routers[2], node])
+        LAN2.addInterface(node.addInterface())
+
+# setup the first LAN
+#  for node in nodes1:
+    #  if node is not None:
+        #  request.Link(members=[routers[1], node])
+
+# setup the second LAN
+#  for node in nodes2:
+    #  if node is not None:
+        #  request.Link(members=[routers[2], node])
 
 # setup a link between routerss
 request.Link(members=[routers[1], routers[2]])
