@@ -14,19 +14,19 @@ class GLOBALS(object):
     SITE_URN = "urn:publicid:IDN+emulab.net+authority+cm"
     # standard Ubuntu release
     UBUNTU18_IMG = "urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU18-64-STD"
-    PNODE_D740 = "d740"  # 24 cores, 192 GB RAM
+    PNODE_D740 = "d740"  # 24 cores, 192 GB RAM TODO: figure out the proper amount of ram, docs are incorrect
     PNODE_D840 = "d840"  # 64 cores, 768 GB RAM
 
 
 # define network parameters
-portal.context.defineParameter("n", "Number of network nodes", portal.ParameterType.INTEGER, 2)
+portal.context.defineParameter("n", "Nodes per LAN", portal.ParameterType.INTEGER, 2)
 
 # retrieve the values the user specifies during instantiation
 params = portal.context.bindParameters()
 
 #  check parameter validity
-if params.n < 1 or params.n > 4:
-    portal.context.reportError(portal.ParameterError("You must choose at least 2 and no more than 4 nodes."))
+if params.n < 1 or params.n > 3:
+    portal.context.reportError(portal.ParameterError("You must choose at least 1 and no more than 3 nodes."))
 
 
 def mkVM(name, image, instantiateOn, cores, ram):
@@ -109,6 +109,7 @@ routers = create_routers()
 nodes1 = create_nodes(count=params.n, prefix=1)
 nodes2 = create_nodes(count=params.n, prefix=2)
 
+
 # setup the first LAN
 LAN1 = request.LAN("LAN1")
 LAN1.addInterface(routers[1].addInterface())
@@ -122,16 +123,6 @@ LAN2.addInterface(routers[2].addInterface())
 for node in nodes2:
     if node is not None:
         LAN2.addInterface(node.addInterface())
-
-# setup the first LAN
-#  for node in nodes1:
-    #  if node is not None:
-        #  request.Link(members=[routers[1], node])
-
-# setup the second LAN
-#  for node in nodes2:
-    #  if node is not None:
-        #  request.Link(members=[routers[2], node])
 
 # setup a link between routerss
 request.Link(members=[routers[1], routers[2]])
