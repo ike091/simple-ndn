@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# this bash script installs various NDN software
+# this bash script installs various NDN software on router 1
 
 # set up ppa repository
 sudo apt-get install software-properties-common -y
@@ -25,4 +25,4 @@ cp /local/repository/nlsr1.conf ~/nlsr/nlsr.conf
 cp /local/repository/.vimrc ~/
 
 # create a udp tunnel
-nfdc face create udp4://10.10.1.2
+nfdc face create udp4://10.10.3.2
