@@ -2,7 +2,8 @@ import time
 from pyndn import Name
 from pyndn import Face
 from pyndn import Interest
-
+from pyndn.transport import UdpTransport
+from pyndn.security import KeyChain
 
 def dump(*list):
     """Prints all parameters"""
@@ -31,22 +32,31 @@ class Counter():
         dump("Time out for interest", interest.getName().toUri())
 
 
+    def onNetworkNack(self, interest, networkNack):
+        self._callbackCount += 1
+        dump("Network nack for interest", interest.getName().toUri())
+
+
 def main():
 
     # silence the warning from interest wire encode
     Interest.setDefaultCanBePrefix(True)
 
-    # the default face will connect using a Unix socket, or go to "localhost"
-    face = Face()
+    # set up a face that connects to the remote forwarder
+    udp_connection_info = UdpTransport.ConnectionInfo("10.10.1.1")
+    udp_transport = UdpTransport()
+    face = Face(udp_transport, udp_connection_info)
+
+    #  face.setCommandSigningInfo(KeyChain(), certificateName)
+    #  face.registerPrefix(Name("/ndn"), onInterest, onRegisterFailed)
 
     counter = Counter()
 
-    word = input("Enter a word to echo: ")
-    
-    name = Name("/testecho")
-    name.append(word)
+    name_text = input("Enter a name to request content from: ")
+    name = Name(name_text)
+
     dump("Express name", name.toUri())
-    face.expressInterest(name, counter.onData, counter.onTimeout)
+    face.expressInterest(name, counter.onData, counter.onTimeout, counter.onNetworkNack)
 
     while counter._callbackCount < 1:
         face.processEvents()
