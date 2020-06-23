@@ -5,6 +5,7 @@ from pyndn import Interest
 from pyndn.transport import UdpTransport
 from pyndn.security import KeyChain
 
+
 def dump(*list):
     """Prints all parameters"""
 
@@ -43,9 +44,10 @@ def main():
     Interest.setDefaultCanBePrefix(True)
 
     # set up a face that connects to the remote forwarder
-    udp_connection_info = UdpTransport.ConnectionInfo("10.10.1.1")
-    udp_transport = UdpTransport()
-    face = Face(udp_transport, udp_connection_info)
+    #  udp_connection_info = UdpTransport.ConnectionInfo("10.10.1.1", 6363)
+    #  udp_transport = UdpTransport()
+    #  face = Face(udp_transport, udp_connection_info)
+    face = Face("10.10.1.1")
     #  face.setCommandSigningInfo(KeyChain(), certificateName)
     #  face.registerPrefix(Name("/ndn"), onInterest, onRegisterFailed)
 
@@ -75,4 +77,5 @@ def main():
 
 
 main()
+
 
