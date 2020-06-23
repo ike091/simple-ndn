@@ -24,5 +24,3 @@ cp /local/repository/nlsr2.conf ~/nlsr/nlsr.conf
 # copy a .vimrc on each VM (provides useful remappings)
 cp /local/repository/.vimrc ~/
 
-# create a udp tunnel
-nfdc face create udp4://10.10.3.1 persistency permanent

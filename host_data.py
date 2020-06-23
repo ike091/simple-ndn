@@ -51,19 +51,19 @@ class Producer():
         self.isDone = False
 
 
-    def run(self, name_text):
+    def run(self, namespace):
         # Create a connection to the local forwarder over a Unix socket
         face = Face()
 
-        name = Name(name_text)
+        prefix = Name(namespace)
 
         # Use the system default key chain and certificate name to sign commands.
         face.setCommandSigningInfo(self.keyChain, self.keyChain.getDefaultCertificateName())
 
         # Also use the default certificate name to sign Data packets.
-        face.registerPrefix(name, self.onInterest, self.onRegisterFailed)
+        face.registerPrefix(prefix, self.onInterest, self.onRegisterFailed)
 
-        dump("Registering prefix", name.toUri())
+        dump("Registering prefix", prefix.toUri())
 
         # Run the event loop forever. Use a short sleep to
         # prevent the Producer from using 100% of the CPU.
