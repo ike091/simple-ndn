@@ -24,6 +24,16 @@ Send test packets between nodes with `ndnpoke` and `ndnpeek`. If the PPA reposit
 
 To test our previous example, enter `echo "Hello World!" | ndnpoke /ndn/node2/hello` on the second node. This will host one data packet on the second node containing the string "Hello World!" with the name "/ndn/node2/hello". To request this data from the first node, enter `ndnpeek -p /ndn/node2/hello`. If everything has been set up correctly, the first node will print "Hello World!" to stdout, indicating success!
 
+
+**Helpful Hints**
+
+* Routes are one-way, and they must exist in the RIB before interests can be satisfied
+*  `ndnpoke` transmits a single data packet; however, multiple requests for that data can be satisfied if the data is cached in the Content Store.
+* A correct udp4 face must be created before nlsr will work properly. Use something like `nfdc face create udp4://10.10.x.x`
+* NFD configuration file is located at `/etc/ndn/nfd.conf`
+* Use the `nfdc cs` command to manipulate the content store
+
+
 **NLSR (Named-Data Link State Routing) Setup**
 
 Install NLSR from the PPA repository or build from source. Modify the provided configuration file to appropriatly name routers and their neighbors (if a two-node network was used, the network should be automatically configured properly). The advertising section of the configuration files can also be modified to tell the network what data is available where.
