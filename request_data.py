@@ -44,14 +44,12 @@ def main():
     Interest.setDefaultCanBePrefix(True)
 
     # set up a face that connects to the remote forwarder
-    #  udp_connection_info = UdpTransport.ConnectionInfo("10.10.1.1", 6363)
-    #  udp_transport = UdpTransport()
-    #  face = Face(udp_transport, udp_connection_info)
-    face = Face("10.10.1.1")
+    udp_connection_info = UdpTransport.ConnectionInfo("10.10.1.1", 6363)
+    udp_transport = UdpTransport()
+    face = Face(udp_transport, udp_connection_info)
+
     #  face.setCommandSigningInfo(KeyChain(), certificateName)
     #  face.registerPrefix(Name("/ndn"), onInterest, onRegisterFailed)
-
-    #  face = Face("10.10.1.1")
 
     counter = Counter()
 
@@ -59,7 +57,12 @@ def main():
     name_text = input("Enter a name to request content from: ")
     name = Name(name_text)
     dump("Express name", name.toUri())
-    face.expressInterest(name, counter.onData, counter.onTimeout, counter.onNetworkNack)
+
+    #  face.expressInterest(name, counter.onData, counter.onTimeout, counter.onNetworkNack)
+
+    interest = Interest(name)
+    interest.setMustBeFresh(False)
+    face.expressInterest(interest, counter.onData, counter.onTimeout, counter.onNetworkNack)
 
     # try to fetch anything
     #  name2 = Name("/")
